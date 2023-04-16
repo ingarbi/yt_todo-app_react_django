@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     "core",
 ]
 
-CORS_ALLOW_ALL_ORIGINS: True
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
