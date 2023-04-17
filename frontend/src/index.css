@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* @layer base {
+    body{
+        @apply font-light
+    }
+} */
+
+@layer components{
+    .icons{
+        @apply h-5 w-5 cursor-pointer;
+    }
+}

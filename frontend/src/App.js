@@ -1,9 +1,13 @@
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [editStatus, setEditStatus] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [openEditUI, setOpenEditUI] = useState(false);
+
   const addTodoHandler = () => {
     console.log("click");
   };
@@ -11,7 +15,6 @@ function App() {
   const deleteTodoHandler = () => {
     console.log("Delete");
   };
-
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -31,7 +34,7 @@ function App() {
             className="w-full py-2 rounded-xl bg-slate-700 text-white outline-none"
           />
           <i onClick={addTodoHandler}>
-            <PlusIcon className="h-5 w-5 cursor-pointer hover:opacity-70" />
+            <PlusIcon className="icons hover:opacity-70" />
           </i>
         </div>
 
@@ -41,20 +44,53 @@ function App() {
               key={todo.id}
               className="max-w-md mx-auto w-full p-5 h-full rounded-xl bg-blue-500 flex items-center justify-between"
             >
-              <p className="cursor-pointer">
-                {todo.name}
-                {" "}
+              <p onClick={()=>{
+                setEditStatus(todo.status)
+                setEditName(todo.name)
+                setOpenEditUI(true)
+              }} className="cursor-pointer">
+                {todo.name}{" "}
                 {todo.status && (
                   <span className="test-xs text-gray-300">(Completed)</span>
                 )}
-                </p>
+              </p>
 
-                  <i onClick={() =>deleteTodoHandler(todo.id)}>
-                    <TrashIcon className="h-5 w-5 cursorpointer" fill="white" />
-                  </i>
-
+              <i onClick={() => deleteTodoHandler(todo.id)}>
+                <TrashIcon className="icons" fill="white" />
+              </i>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div
+        className={`w-72 h-fit bg-white text-slate-900 absolute left-1/2 rounded-xl px-3 py-2 -translate-x-1/2 -translate-y-1/2 ${
+          openEditUI ? "" : "hidden"
+        }`}
+      >
+        <div className="flex items justify-between">
+          <h1>Edit Todos</h1>
+          <i onClick={() => setOpenEditUI(false)}>
+            <XMarkIcon className="icons" />
+          </i>
+        </div>
+        <div className="flex items-center h-5 w-full space-x-2 mb-4">
+          <input
+            type="checkbox"
+            className="h-5 w-5"
+            checked={editStatus}
+            onChange={() => setEditStatus(!editStatus)}
+          />
+        </div>
+
+        <div>
+          <input
+            type="text"
+            className="w-full px-3 py-2 bg-gray-300 rounded-xl"
+            placeholder="PPP.."
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+          />
         </div>
       </div>
     </div>
