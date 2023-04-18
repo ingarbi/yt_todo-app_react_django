@@ -4,12 +4,29 @@ import axios from "axios";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [name, setName] = useState("");
   const [editStatus, setEditStatus] = useState(false);
-  const [editName, setEditName] = useState('');
+  const [editName, setEditName] = useState("");
+  const [editTodo, setEditTodo] = useState({});
   const [openEditUI, setOpenEditUI] = useState(false);
 
   const addTodoHandler = () => {
-    console.log("click");
+    const postTodo = async () => {
+      const postTododata = {
+        name: name,
+      };
+      const { data } = await axios.post(
+        "http://127.0.0.1:8000/todos/",
+        postTododata
+      );
+      setTodos([...todos, data])
+      setName("")
+    };
+    postTodo()
+  };
+
+  const editTodoHandler = (id) => {
+    console.log(id);
   };
 
   const deleteTodoHandler = () => {
@@ -30,8 +47,11 @@ function App() {
         <h1 className="text-5xl text-center pb-5">Todo App</h1>
         <div className="flex items-center justify-between bg-slate-700 rounded-xl px-4">
           <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             type="text"
             className="w-full py-2 rounded-xl bg-slate-700 text-white outline-none"
+            placeholder="Add ToDo here..."
           />
           <i onClick={addTodoHandler}>
             <PlusIcon className="icons hover:opacity-70" />
@@ -44,11 +64,15 @@ function App() {
               key={todo.id}
               className="max-w-md mx-auto w-full p-5 h-full rounded-xl bg-blue-500 flex items-center justify-between"
             >
-              <p onClick={()=>{
-                setEditStatus(todo.status)
-                setEditName(todo.name)
-                setOpenEditUI(true)
-              }} className="cursor-pointer">
+              <p
+                onClick={() => {
+                  setEditStatus(todo.status);
+                  setEditName(todo.name);
+                  setEditTodo(todo);
+                  setOpenEditUI(true);
+                }}
+                className="cursor-pointer"
+              >
                 {todo.name}{" "}
                 {todo.status && (
                   <span className="test-xs text-gray-300">(Completed)</span>
@@ -69,7 +93,7 @@ function App() {
         }`}
       >
         <div className="flex items justify-between">
-          <h1>Edit Todos</h1>
+          <h1 className="text-xl mb-2">Edit Todos</h1>
           <i onClick={() => setOpenEditUI(false)}>
             <XMarkIcon className="icons" />
           </i>
@@ -80,18 +104,25 @@ function App() {
             className="h-5 w-5"
             checked={editStatus}
             onChange={() => setEditStatus(!editStatus)}
-          />
+          />{" "}
+          <i>Status</i>
         </div>
 
         <div>
           <input
             type="text"
             className="w-full px-3 py-2 bg-gray-300 rounded-xl"
-            placeholder="PPP.."
+            placeholder="Edit Name.."
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
           />
         </div>
+        <button
+          onClick={() => editTodoHandler(editTodo.id)}
+          className="w-full p-2 rounded-xl bg-slate-700 text-white mt-2"
+        >
+          Update
+        </button>
       </div>
     </div>
   );
