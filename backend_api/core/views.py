@@ -24,3 +24,16 @@ def todos_list(request):
         todo = Todo.objects.create(name=name)
         serializer = TodoSerializer(todo, many=False)
         return Response(serializer.data)
+
+
+@api_view(["GET", "DELETE", "PATCH"])
+def todo(request, pk):
+    if request.method == "GET":
+        todo = Todo.objects.get(pk=pk)
+        serializer = TodoSerializer(todo, many=False)
+        return Response(serializer.data)
+
+    if request.method == "DELETE":
+        todo = Todo.objects.get(pk=pk)
+        todo.delete()
+        return Response(status=HTTP_200_OK)

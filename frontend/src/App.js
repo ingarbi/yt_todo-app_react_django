@@ -29,8 +29,13 @@ function App() {
     console.log(id);
   };
 
-  const deleteTodoHandler = () => {
-    console.log("Delete");
+  const deleteTodoHandler = (id) => {
+    const deleteTodo = async() =>{
+      await axios.delete(`http://127.0.0.1:8000/todos/${id}/`)
+      const newTodos = todos.filter((todo) => todo.id !== id)
+      setTodos(newTodos)
+    }
+    deleteTodo()
   };
 
   useEffect(() => {
